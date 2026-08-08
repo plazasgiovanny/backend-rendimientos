@@ -15,7 +15,9 @@ Queda escuchando en `http://localhost:5193`. CORS está habilitado solo para `ht
 | Método | Ruta | Respuesta |
 |---|---|---|
 | `GET` | `/api/cuenta` | `{ "saldoTotal": 10000, "tasaAnualPorcentaje": 33 }` |
-| `GET` | `/api/historial?dias=7` | `[{ "fechaHora": "2026-07-31T10:03:00-05:00", "monto": 47 }, ...]` (7 días que suman $321) |
+| `GET` | `/api/historial?dias=7` | `[{ "fechaHora": "2026-07-31T10:02:00-05:00", "monto": 16 }, ...]` (últimos 7 días, suman $91) |
+
+`dias` acepta 7, 15 o 30, y cada valor devuelve un dataset real y distinto — ya no es el mismo array repetido con un warning silencioso. Los tres se recortan de una misma tabla de 30 días (2026-07-08 a 2026-08-06) calculada para promediar ~$13/día: los últimos 7 suman $91, los últimos 15 suman $193 y los 30 completos suman $389. Un `dias` fuera de {7, 15, 30} cae al fallback de 7 días con un warning en el log.
 
 `fechaHora` lleva el offset de Colombia (`-05:00`) explícito, no una fecha suelta — así el cliente nunca tiene que adivinar en qué zona horaria interpretar el dato.
 
@@ -23,4 +25,4 @@ Nota: `/api/cuenta` **no** devuelve `rendimientoAcumulado` — ese valor lo calc
 
 ## Alcance
 
-Mínimo a propósito (dado el plazo de la entrega): solo estos dos endpoints, sin base de datos, sin simulación de latencia/errores de red (a diferencia del ejemplo oficial `flux-async`, que sí las incluye). Los datos son los mismos 7 días fijos que ya estaban en `rendimientosService.ts` del frontend.
+Mínimo a propósito (dado el plazo de la entrega): solo estos dos endpoints, sin base de datos, sin simulación de latencia/errores de red (a diferencia del ejemplo oficial `flux-async`, que sí las incluye). Los datos son una tabla de 30 días calculada para reproducir la evidencia citada en el documento académico del equipo (~$13/día para $10.000 al 33% E.A.), no los 7 valores fijos que había antes.
