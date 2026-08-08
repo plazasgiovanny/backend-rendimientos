@@ -15,7 +15,9 @@ Queda escuchando en `http://localhost:5193`. CORS está habilitado solo para `ht
 | Método | Ruta | Respuesta |
 |---|---|---|
 | `GET` | `/api/cuenta` | `{ "saldoTotal": 10000, "tasaAnualPorcentaje": 33 }` |
-| `GET` | `/api/historial?dias=7` | `[{ "fecha": "2026-07-31", "monto": 47 }, ...]` (7 días que suman $321) |
+| `GET` | `/api/historial?dias=7` | `[{ "fechaHora": "2026-07-31T10:03:00-05:00", "monto": 47 }, ...]` (7 días que suman $321) |
+
+`fechaHora` lleva el offset de Colombia (`-05:00`) explícito, no una fecha suelta — así el cliente nunca tiene que adivinar en qué zona horaria interpretar el dato.
 
 Nota: `/api/cuenta` **no** devuelve `rendimientoAcumulado` — ese valor lo calcula el Store del frontend a partir del historial recibido, para mantener la consistencia maestro-detalle por diseño (ver `prototipo-rendimientos/src/stores/rendimientosStore.ts`).
 
