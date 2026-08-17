@@ -1,12 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// El frontend (Vite) corre en http://localhost:5173 por defecto.
+// El frontend (Vite) corre en http://localhost:5173 en modo standalone.
+// Cuando Rendimientos se compone dentro del shell-orchestrator (U4), el
+// fetch al backend sale con Origin http://localhost:4000 (el origen de la
+// pagina ensamblada por el shell, no el del MFE que la origino) — por eso
+// ambos origenes deben estar permitidos.
 const string CorsPolicy = "FrontendDev";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5173", "http://localhost:4000")
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
